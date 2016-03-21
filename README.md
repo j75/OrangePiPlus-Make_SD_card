@@ -1,6 +1,7 @@
 # OrangePi+ bootable image creation
 
-The created image file (**sdcard.img**) is suitable for a SD card.
+The created image file (**sdcard.img**) is suitable for a SD card to
+run Linux on a OrangePi Plus board.
 
 ## References
   * [Orange Pi Main Page](http://www.orangepi.org/Docs/mainpage.html)
