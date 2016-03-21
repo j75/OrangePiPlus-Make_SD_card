@@ -37,7 +37,6 @@ get_sources() {
 }
 
 build_script() {
-	# === Building boot0 image =========================================================
 	echo "Building script.bin.${1}_${2}_${3}"
 
 	cp ${LOBOSRCDIR}/build/orange_pi_plus.fex ${OUTFOLDER}/sys_config.fex
@@ -46,21 +45,6 @@ build_script() {
 	mv ${OUTFOLDER}/_sys_config.fex ${OUTFOLDER}/sys_config.fex
 	cat ${OUTFOLDER}/sys_config.fex | sed s/"screen1_output_mode      = 10"/"screen1_output_mode      = 4"/g > ${OUTFOLDER}/_sys_config.fex
 	mv ${OUTFOLDER}/_sys_config.fex ${OUTFOLDER}/sys_config.fex
-
-	#####
-	cp ${LOBOSRCDIR}/chips/sun8iw7p1/bin/boot0_sdcard_sun8iw7p1.bin ${OUTFOLDER}/boot0_sdcard.fex
-	fex2bin ${OUTFOLDER}/sys_config.fex ${OUTFOLDER}/sys_config.bin
-	if [ $? -ne 0 ]; then
-	  echo "  Error fex2bin "
-	  exit 1
-	fi
-	
-	${LOBOSRCDIR}/pctools/linux/mod_update/update_boot0 build/boot0_sdcard.fex \
-		${OUTFOLDER}/sys_config.bin SDMMC_CARD > build_script_${1}_${2}.log 2>&1
-	if [ $? -ne 0 ]; then
-	  echo "  Error update_boot0 "
-	  exit 1
-	fi
 }
 
 build_bin () {
@@ -184,6 +168,7 @@ copy_boot_partition() {
 	BASELDEV=`echo $LOOPDEV | cut -d '/' -f3`
 	sudo mount /dev/mapper/${BASELDEV}p1 $TMPF
 	copy_file boot.scr $TMPF
+	rm boot.scr
 	#copy_file fex $TMPF
 	copy_file ${SRCFOLDER}/output/uImage $TMPF
 	grep -v "^;" ${OUTFOLDER}/sys_config.fex | grep -v "^#" > script.fex
