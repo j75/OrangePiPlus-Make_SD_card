@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# @(#)mybuild.sh	1.11 03/21/16
-
 # ./OrangePI-Kernel/build/config.good/sun8iw7p1smp_lobo_defconfig.opiplus
 
 TMPF=`mktemp -d /tmp/XXXOPI_$$`
@@ -194,8 +192,8 @@ make_uboot_commands () {
 	echo "Creating boot.cmd file"
 	cat << EOF > boot.cmd
 setenv bootargs console=ttyS0 root=/dev/mmcblk0p1 rootwait panic=10 ${extra}
-ext2load mmc 0 0x43000000 boot/script.bin
-ext2load mmc 0 0x48000000 boot/uImage
+ext2load mmc 0 0x43000000 script.bin
+ext2load mmc 0 0x48000000 uImage
 bootm 0x48000000
 EOF
 	echo "Converting boot.cmd -> boot.scr"
