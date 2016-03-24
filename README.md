@@ -18,4 +18,42 @@ run Linux on a OrangePi Plus board.
   * [Setting up the Linux distribution root file system](http://www.orangepi.org/Docs/SettinguptheLinux.html)
 
 ## Issues
-  *
+  + at boot: <keyword>
+  ```
+U-Boot 2016.03-00317-g83d95b6 (Mar 21 2016 - 21:54:36 +0100) Allwinner Technology
+
+CPU:   Allwinner H3 (SUN8I)
+Model: Xunlong Orange Pi Plus
+I2C:   ready
+DRAM:  1 GiB
+MMC:   SUNXI SD/MMC: 0
+*** Warning - bad CRC, using default environment
+
+In:    serial
+Out:   serial
+Err:   serial
+Net:   No ethernet found.
+starting USB...
+USB0:   USB EHCI 1.00
+USB1:   USB EHCI 1.00
+scanning bus 0 for devices... 1 USB Device(s) found
+scanning bus 1 for devices... 1 USB Device(s) found
+Hit any key to stop autoboot:  0 
+switch to partitions #0, OK
+mmc0 is current device
+Scanning mmc 0:1...
+Found U-Boot script /boot.scr
+228 bytes read in 66 ms (2.9 KiB/s)
+## Executing script at 43100000
+36856 bytes read in 160 ms (224.6 KiB/s)
+8423416 bytes read in 8947 ms (918.9 KiB/s)
+## Booting kernel from Legacy Image at 48000000 ...
+   Image Name:   Linux-3.4.39-1mni
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    8423352 Bytes = 8 MiB
+   Load Address: 40008000
+   Entry Point:  40008000
+   Verifying Checksum ... OK
+   Loading Kernel Image ... Image too large: increase CONFIG_SYS_BOOTM_LEN
+Must RESET board to recover
+```

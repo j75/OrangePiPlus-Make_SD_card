@@ -87,9 +87,11 @@ build_uboot_new () {
 		else
 			set_cross_compiler
 			cd u-boot
-			make disclean
+			make ARCH=arm mrproper
 			echo "make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig"
 			make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig
+			echo "make CROSS_COMPILE=${CROSS_COMP}-"
+			# TODO -DCONFIG_SYS_BOOTM_LEN=0xF00000
 			make CROSS_COMPILE=${CROSS_COMP}-
 		fi
 	fi
@@ -243,6 +245,8 @@ copy_root_partition() {
 	echo "Transferring kernel to SD card file root partition"
 	ls -alF ${SRCFOLDER}/output/*-*
 	sudo cp ${SRCFOLDER}/output/*-* ${TMPDIR}/boot
+	#
+	sudo cp u-boot/System.map ${TMPDIR}/boot/u-boot-System.map
 	#
 	distro="jessie"
 	echo "Loading Debian $distro distribution"
