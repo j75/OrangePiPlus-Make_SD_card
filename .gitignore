@@ -2,4 +2,6 @@ OrangePiPlus-Kernel/
 u-boot/
 build*
 boot.*
-sdcard.img
+*.img
+*.log
+*.gz
