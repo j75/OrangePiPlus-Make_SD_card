@@ -92,7 +92,9 @@ build_uboot_new () {
 			make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig
 			echo "make CROSS_COMPILE=${CROSS_COMP}-"
 			# TODO -DCONFIG_SYS_BOOTM_LEN=0xF00000
+			#make CROSS_COMPILE=${CROSS_COMP}- V=1
 			make CROSS_COMPILE=${CROSS_COMP}-
+			cd ..
 		fi
 	fi
 }
