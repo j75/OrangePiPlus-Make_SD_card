@@ -86,14 +86,24 @@ build_uboot_new () {
 			echo "u-boot-sun8iw7p1.bin was previously created"
 		else
 			set_cross_compiler
+			# TODO -DCONFIG_SYS_BOOTM_LEN=0xF00000
+			perl -pi -e 's|^#define CONFIG_SYS_BOOTM_LEN.*|#define CONFIG_SYS_BOOTM_LEN    0xFFF000|' ./u-boot/common/bootm.c
 			cd u-boot
 			make ARCH=arm mrproper
 			echo "make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig"
 			make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig
 			echo "make CROSS_COMPILE=${CROSS_COMP}-"
-			# TODO -DCONFIG_SYS_BOOTM_LEN=0xF00000
 			#make CROSS_COMPILE=${CROSS_COMP}- V=1
 			make CROSS_COMPILE=${CROSS_COMP}-
+			RES_COMP_UBOOT=$?
+			git checkout common/bootm.c
+			if [ $RES_COMP_UBOOT -gt 0 ]; then
+				echo "Error building u-boot"
+				exit 9
+			else
+				echo "OK u-boot creation"
+				ls -alF u-boot-sunxi-with-spl.bin u-boot
+			fi
 			cd ..
 		fi
 	fi
@@ -349,6 +359,7 @@ check_requirements() {
 	check_exec debootstrap
 	#check_exec cdebootstrap
 	check_exec chroot
+	check_exec perl
 	check_group disk
 	check_group sudo
 	echo "All requirements are fullfiled!"
