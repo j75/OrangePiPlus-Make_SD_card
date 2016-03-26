@@ -35,7 +35,7 @@ get_sources() {
 	fi
 }
 
-build_script() {
+build_fex_script() {
 	echo "Building script.bin.${1}_${2}_${3}"
 
 	cp ${LOBOSRCDIR}/build/orange_pi_plus.fex ${OUTFOLDER}/sys_config.fex
@@ -44,6 +44,7 @@ build_script() {
 	mv ${OUTFOLDER}/_sys_config.fex ${OUTFOLDER}/sys_config.fex
 	cat ${OUTFOLDER}/sys_config.fex | sed s/"screen1_output_mode      = 10"/"screen1_output_mode      = 4"/g > ${OUTFOLDER}/_sys_config.fex
 	mv ${OUTFOLDER}/_sys_config.fex ${OUTFOLDER}/sys_config.fex
+	# max. frequency: 1.2 GHz
 }
 
 build_bin () {
@@ -52,7 +53,7 @@ build_bin () {
 	else
 		mkdir ${OUTFOLDER}
 
-		build_script "OPI-PLUS" "720p50" "hdmi"
+		build_fex_script "OPI-PLUS" "720p50" "hdmi"
 	fi
 }
 
@@ -87,6 +88,7 @@ build_uboot_new () {
 		else
 			set_cross_compiler
 			# TODO -DCONFIG_SYS_BOOTM_LEN=0xF00000
+			echo "Preventing 'Image too large: increase CONFIG_SYS_BOOTM_LEN'"
 			perl -pi -e 's|^#define CONFIG_SYS_BOOTM_LEN.*|#define CONFIG_SYS_BOOTM_LEN    0xFFF000|' ./u-boot/common/bootm.c
 			cd u-boot
 			make ARCH=arm mrproper
@@ -121,8 +123,8 @@ build_kernel () {
 # Secondary program loader + u-Boot
 write_initial_SPL_anduBoot () {
 	dd if=./u-boot/u-boot-sunxi-with-spl.bin of=$1 bs=1024 seek=8
-	echo "Secondary program loader and u-Boot (u-boot-sunxi-with-spl.bin) have been written on $1 after first 8k"
-	
+	echo "Secondary program loader and u-Boot (u-boot-sunxi-with-spl.bin)"
+    echo "    have been written on $1 after first 8k"	
 }
 
 # SPL + u-Boot
@@ -186,6 +188,15 @@ copy_file() {
 	fi
 }
 
+convert_fex2bin ()
+{
+	grep -v "^;" ${OUTFOLDER}/sys_config.fex | grep -v "^#" > script.fex
+	perl -pi -e 's|^extremity_freq.*|extremity_freq = 1200000000|g' script.fex
+	perl -pi -e 's|^max_freq.*|max_freq = 1100000000|g' script.fex
+	echo "Converting script.fex -> script.bin"
+	fex2bin script.fex script.bin
+}
+
 copy_boot_partition() {
 	LOOPDEV=`losetup -f --show $SD_CARD_FILE`
 	echo "Loop device is $LOOPDEV"
@@ -204,9 +215,8 @@ copy_boot_partition() {
 	echo "Transferring uImage kernel to SD card boot partition"
 	ls -alF ${SRCFOLDER}/output/uImage*
 	sudo cp -a ${SRCFOLDER}/output/uImage* $TMPDIR
-	grep -v "^;" ${OUTFOLDER}/sys_config.fex | grep -v "^#" > script.fex
-	perl -pi -e 's|^max_freq.*|max_freq = 1100000000|g' script.fex
-	fex2bin script.fex script.bin
+	#
+	convert_fex2bin
 	copy_file script.fex $TMPDIR
 	copy_file script.bin $TMPDIR
 	rm -f script.*
@@ -360,6 +370,7 @@ check_requirements() {
 	#check_exec cdebootstrap
 	check_exec chroot
 	check_exec perl
+	check_exec fex2bin
 	check_group disk
 	check_group sudo
 	echo "All requirements are fullfiled!"
