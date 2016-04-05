@@ -1,7 +1,10 @@
 OrangePiPlus-Kernel/
+OrangePiPlus-Kernel
 u-boot/
+u-boot
 build*
 boot.*
 *.img
 *.log
 *.gz
+SCCS/
