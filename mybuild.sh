@@ -166,8 +166,8 @@ format() {
 		losetup -d $LOOPDEV
 		exit 7
 	fi
-	mkfs.ext4 -L Linux /dev/mapper/${BASELDEV}p2
 	FORMATP2=""
+	mkfs.ext4 -L Linux /dev/mapper/${BASELDEV}p2
 	if [ $? -gt 0 ]; then
 		echo "Error formating /dev/mapper/${BASELDEV}p2"
 		FORMATP2="ko"
