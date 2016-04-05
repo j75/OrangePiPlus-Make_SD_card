@@ -90,6 +90,7 @@ build_uboot_new () {
 			echo "make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig"
 			make CROSS_COMPILE=${CROSS_COMP}- orangepi_plus_defconfig
 			make CROSS_COMPILE=${CROSS_COMP}-
+			cd ..
 		fi
 	fi
 }
