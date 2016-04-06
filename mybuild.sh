@@ -44,7 +44,6 @@ build_fex_script() {
 	mv ${OUTFOLDER}/_sys_config.fex ${OUTFOLDER}/sys_config.fex
 	cat ${OUTFOLDER}/sys_config.fex | sed s/"screen1_output_mode      = 10"/"screen1_output_mode      = 4"/g > ${OUTFOLDER}/_sys_config.fex
 	mv ${OUTFOLDER}/_sys_config.fex ${OUTFOLDER}/sys_config.fex
-	# max. frequency: 1.2 GHz
 }
 
 build_bin () {
@@ -191,8 +190,9 @@ copy_file() {
 convert_fex2bin ()
 {
 	grep -v "^;" ${OUTFOLDER}/sys_config.fex | grep -v "^#" > script.fex
+	# max. frequency: 1.2 GHz
 	perl -pi -e 's|^extremity_freq.*|extremity_freq = 1200000000|g' script.fex
-	perl -pi -e 's|^max_freq.*|max_freq = 1100000000|g' script.fex
+	#perl -pi -e 's|^max_freq.*|max_freq = 1100000000|g' script.fex
 	echo "Converting script.fex -> script.bin"
 	fex2bin script.fex script.bin
 }
